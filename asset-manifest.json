@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/AlgorithmVisualizer-React/static/css/main.45c5a9ba.chunk.css",
+    "main.js": "/AlgorithmVisualizer-React/static/js/main.42c60726.chunk.js",
+    "main.js.map": "/AlgorithmVisualizer-React/static/js/main.42c60726.chunk.js.map",
+    "runtime-main.js": "/AlgorithmVisualizer-React/static/js/runtime-main.11be09b6.js",
+    "runtime-main.js.map": "/AlgorithmVisualizer-React/static/js/runtime-main.11be09b6.js.map",
+    "static/js/2.2dc9a2b6.chunk.js": "/AlgorithmVisualizer-React/static/js/2.2dc9a2b6.chunk.js",
+    "static/js/2.2dc9a2b6.chunk.js.map": "/AlgorithmVisualizer-React/static/js/2.2dc9a2b6.chunk.js.map",
+    "static/js/3.9a5708ef.chunk.js": "/AlgorithmVisualizer-React/static/js/3.9a5708ef.chunk.js",
+    "static/js/3.9a5708ef.chunk.js.map": "/AlgorithmVisualizer-React/static/js/3.9a5708ef.chunk.js.map",
+    "index.html": "/AlgorithmVisualizer-React/index.html",
+    "static/css/main.45c5a9ba.chunk.css.map": "/AlgorithmVisualizer-React/static/css/main.45c5a9ba.chunk.css.map",
+    "static/js/2.2dc9a2b6.chunk.js.LICENSE.txt": "/AlgorithmVisualizer-React/static/js/2.2dc9a2b6.chunk.js.LICENSE.txt",
+    "static/media/Node.css": "/AlgorithmVisualizer-React/static/media/start.dbf71d95.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.11be09b6.js",
+    "static/js/2.2dc9a2b6.chunk.js",
+    "static/css/main.45c5a9ba.chunk.css",
+    "static/js/main.42c60726.chunk.js"
+  ]
+}
