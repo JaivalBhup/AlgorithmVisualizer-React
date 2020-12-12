@@ -27,6 +27,12 @@ class App extends React.Component {
     if(algo === "A*"){
       this.child.current.visualizeAStar()
     }
+    if(algo === "DFS"){
+      this.child.current.visualizeDFS()
+    }
+    if(algo === "BFS"){
+      this.child.current.visualizeBFS()
+    }
   }
   render(){
   return (
@@ -50,8 +56,9 @@ class App extends React.Component {
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           <button className="dropdown-item" onClick={(e)=>this.chageAlgo("Dijkstra")}>Dijkstra</button>
           <a className="dropdown-item" onClick={(e)=>this.chageAlgo("A*")}>A*</a>
-          {/* <div className="dropdown-divider"></div>
-          <a className="dropdown-item" href="#">Something else here</a> */}
+          <div className="dropdown-divider"></div>
+          <a className="dropdown-item" onClick={(e)=>this.chageAlgo("BFS")}>Breadth First Search</a>
+          <a className="dropdown-item" onClick={(e)=>this.chageAlgo("DFS")}>Depth First Search</a> 
         </div>
       </li>
       </ul>

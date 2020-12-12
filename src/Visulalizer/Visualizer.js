@@ -2,6 +2,8 @@ import React from "react";
 import Node from "./Node";
 import {dijkstra,getPath} from "./Algorithms/dijkstra"
 import {AStar} from "./Algorithms/AStar"
+import {DFS} from './Algorithms/dfs';
+import {BFS} from './Algorithms/bfs';
 import "./grid.css";
 
 let STARTNODE_i = 10
@@ -168,6 +170,27 @@ class Visualizer extends React.Component{
         this.animate(path, shortestPath);
     }
     //------a*
+    //DFS
+    visualizeDFS(){
+        this.setState({message:"Searching..."})
+        const grid = this.state.grid
+        const startNode = grid[STARTNODE_i][STARTNODE_j]
+        const endNode = grid[ENDNODE_i][ENDNODE_j]
+        const path = DFS(grid,startNode, endNode)
+        const shortestPath = getPath(endNode);
+        this.animate(path, shortestPath);
+    }
+    //-------DFS
+    visualizeBFS(){
+        console.log("BFS")
+        this.setState({message:"Searching..."})
+        const grid = this.state.grid
+        const startNode = grid[STARTNODE_i][STARTNODE_j]
+        const endNode = grid[ENDNODE_i][ENDNODE_j]
+        const path = BFS(grid,startNode, endNode)
+        const shortestPath = getPath(endNode);
+        this.animate(path, shortestPath);
+    }
     render(){
         const nodes = this.state.grid
         return (<div className = "main">
