@@ -36,13 +36,13 @@ class App extends React.Component {
       <a className="navbar-brand" href="#">Algorithm Visualizer</a>
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav mr-auto">
-      <li className="nav-item active">
+      {/* <li className="nav-item active">
       <a className="nav-link" href="https://github.com/JaivalBhup/AlgorithmVisualizer-React">GitHub Repo</a>
-      </li>
-      {/*
-      <li className="nav-item">
-        <a className="nav-link" href="#">Link</a>
       </li> */}
+      
+      <li className="nav-item">
+        <a className="nav-link" href="https://github.com/JaivalBhup/AlgorithmVisualizer-React">GitHub Repo</a>
+      </li>
       <li className="nav-item dropdown">
         <a className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {this.state.currentAlgo}
