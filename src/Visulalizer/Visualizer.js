@@ -4,6 +4,7 @@ import {dijkstra,getPath} from "./Algorithms/dijkstra"
 import {AStar} from "./Algorithms/AStar"
 import {DFS} from './Algorithms/dfs';
 import {BFS} from './Algorithms/bfs';
+import {GBS} from './Algorithms/gbs';
 import "./grid.css";
 
 let STARTNODE_i = 10
@@ -19,7 +20,8 @@ class Visualizer extends React.Component{
             mousePressed:false,
             startPicked:false,
             endPicked: false,
-            message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls"
+            message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls",
+            showScores: false
         }
     }
     componentDidMount(){
@@ -48,6 +50,7 @@ class Visualizer extends React.Component{
                     document.getElementById(`node-${i}-${j}`).className = "node node-end";}
             if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd){
             document.getElementById(`node-${i}-${j}`).className = "node";
+            document.getElementById(`node-${i}-${j}`).innerHTML = "";
             }
             }
             this.setState({message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls"})
@@ -110,7 +113,7 @@ class Visualizer extends React.Component{
     //------------------ Mouse Events
 
     //Animation
-    animate(path, shortPath){
+    animate(path, shortPath, showScore){
         if(path===-1){this.setState({message:"No Solution"});
         return;    
     }
@@ -126,6 +129,9 @@ class Visualizer extends React.Component{
                 const node = path[i]
                 if(!node.isStart && !node.isEnd){
                 document.getElementById(`node-${node.row}-${node.col}`).className = "node node-visited";
+                if(showScore){
+                    document.getElementById(`node-${node.row}-${node.col}`).innerHTML = `<p class = "score">${node.f}</p>`;
+                }
                 }
                 }, 10*i);
             }
@@ -149,25 +155,25 @@ class Visualizer extends React.Component{
     //--------animation
 
     // Dijkstra
-    visualizeDijkstra(){
+    visualizeDijkstra(showScore){
         this.setState({message:"Searching..."})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
         const path = dijkstra(grid,startNode, endNode)
         const shortestPath = getPath(endNode)
-        this.animate(path, shortestPath);
+        this.animate(path, shortestPath, showScore);
     }
     //-----dijkstra
     // A*
-    visualizeAStar(){
+    visualizeAStar(showScore){
         this.setState({message:"Searching..."})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
         const path = AStar(grid,startNode, endNode)
         const shortestPath = getPath(endNode);
-        this.animate(path, shortestPath);
+        this.animate(path, shortestPath, showScore);
     }
     //------a*
     //DFS
@@ -178,18 +184,30 @@ class Visualizer extends React.Component{
         const endNode = grid[ENDNODE_i][ENDNODE_j]
         const path = DFS(grid,startNode, endNode)
         const shortestPath = getPath(endNode);
-        this.animate(path, shortestPath);
+        this.animate(path, shortestPath, false);
     }
     //-------DFS
+    //BFS
     visualizeBFS(){
-        console.log("BFS")
         this.setState({message:"Searching..."})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
         const path = BFS(grid,startNode, endNode)
         const shortestPath = getPath(endNode);
-        this.animate(path, shortestPath);
+        this.animate(path, shortestPath, false);
+    }
+    //------BFS
+    //Greedy first search
+    visualizeGBS(showScore){
+        console.log("GBS")
+        this.setState({message:"Searching..."})
+        const grid = this.state.grid
+        const startNode = grid[STARTNODE_i][STARTNODE_j]
+        const endNode = grid[ENDNODE_i][ENDNODE_j]
+        const path = GBS(grid,startNode, endNode)
+        const shortestPath = getPath(endNode);
+        this.animate(path,shortestPath, showScore)
     }
     render(){
         const nodes = this.state.grid

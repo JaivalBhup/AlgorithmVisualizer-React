@@ -3,14 +3,15 @@
     if (!startNode || !endNode || (startNode === endNode)){
         return false;
     }
+    changeFtoInfinity(grid)
     const path = [];
-    startNode.distance = 0;
+    startNode.f = 0;
     const unvisitedNodes = getAllNodes(grid);
     while(!!unvisitedNodes.length){
         sortNodes(unvisitedNodes);
         const nextNode = unvisitedNodes.shift();
         if (nextNode.isWall) continue;
-        if (nextNode.distance === Infinity) return -1;
+        if (nextNode.f === Infinity) return -1;
         nextNode.isVisited = true
         path.push(nextNode)
         if(nextNode === endNode) return path
@@ -20,13 +21,13 @@
 }
 
 function sortNodes(n){
-    n.sort((n1, n2) => n1.distance - n2.distance );
+    n.sort((n1, n2) => n1.f - n2.f );
 }
 
 function updateNeighbour(node,grid) {
     const neighbours = getNeighbours(node, grid);
     for(const n of neighbours){
-        n.distance = node.distance + 1;
+        n.f = node.f + 1;
         n.previous = node
     }
 }
@@ -50,6 +51,14 @@ function getAllNodes(grid){
         }
     }
     return nodes;
+}
+
+function changeFtoInfinity(grid) {
+    for(let i of grid){
+        for(let j of i){
+            j.f = Infinity
+        }
+    }
 }
 
 export function getPath(endNode) {

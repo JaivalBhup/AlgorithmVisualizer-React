@@ -6,32 +6,63 @@ class App extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      currentAlgo: "Dijkstra"
+      currentAlgo: "Dijkstra",
+      algoTypeWeighted:true,
+      showScores:false
     }
     this.child = React.createRef()
   }
+  changeShowScores(){
+    this.setState(prevState=>{
+      return {
+        showScores: !prevState.showScores
+      }
+    })
+  }
   chageAlgo(a){
     this.setState({currentAlgo:a})
+    setTimeout(()=>{
+    console.log(this.state.currentAlgo)
+    const algo = this.state.currentAlgo
+    if(algo === "Dijkstra"){
+      this.setState({algoTypeWeighted:true})
+    }
+    if(algo === "A*"){
+      this.setState({algoTypeWeighted:true})
+        }
+    if(algo === "DFS"){
+      this.setState({algoTypeWeighted:false})
+        }
+    if(algo === "BFS"){
+      this.setState({algoTypeWeighted:false})
+        }
+    if(algo === "GBS"){
+      this.setState({algoTypeWeighted:true})
+        }
+    },100)
   }
   clear(e){
     e.preventDefault()
     this.child.current.clear(e)
   }
-  Visualize(e){
+  Visualize(e, showScore){
     e.preventDefault()
     const algo = this.state.currentAlgo
     console.log(algo)
     if(algo === "Dijkstra"){
-      this.child.current.visualizeDijkstra()
+      this.child.current.visualizeDijkstra(showScore)
     }
     if(algo === "A*"){
-      this.child.current.visualizeAStar()
+      this.child.current.visualizeAStar(showScore)
     }
     if(algo === "DFS"){
       this.child.current.visualizeDFS()
     }
     if(algo === "BFS"){
       this.child.current.visualizeBFS()
+    }
+    if(algo === "GBS"){
+      this.child.current.visualizeGBS(showScore)
     }
   }
   render(){
@@ -54,17 +85,39 @@ class App extends React.Component {
           {this.state.currentAlgo}
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <button className="dropdown-item" onClick={(e)=>this.chageAlgo("Dijkstra")}>Dijkstra</button>
-          <a className="dropdown-item" onClick={(e)=>this.chageAlgo("A*")}>A*</a>
-          <div className="dropdown-divider"></div>
-          <a className="dropdown-item" onClick={(e)=>this.chageAlgo("BFS")}>Breadth First Search</a>
-          <a className="dropdown-item" onClick={(e)=>this.chageAlgo("DFS")}>Depth First Search</a> 
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("Dijkstra")}>Dijkstra</a>
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("A*")}>A*</a>
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("GBS")}>Greedy Best Search</a>
+          <div className="dropdown-divider">Unweighted</div>
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("BFS")}>Breadth First Search</a>
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("DFS")}>Depth First Search</a> 
         </div>
+        
+      </li>
+      <li className = "nav-item">
+      <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+      <div style= {{marginTop:"7px", marginRight:"3px",marginLeft:"4px",fontSize:"15px"}}>Show Scores</div>
+      <div className="btn-group btn-group-sm" role="group" aria-label="First group">
+      <button 
+        type="button" 
+        className={this.state.showScores ? "btn btn-success" : "btn btn-secondary"}
+        onClick={()=>this.changeShowScores()}
+        disabled = {this.state.algoTypeWeighted ? false : true}>
+        Yes</button>
+      <button 
+        type="button" 
+        className={this.state.showScores ? "btn btn-secondary" : "btn btn-success"}
+        onClick={()=>this.changeShowScores()}
+        disabled = {this.state.algoTypeWeighted ? false : true}>
+        No</button>
+    </div>
+  </div>
+      {/* <button className="btn btn-outline-success my-2 my-sm-0" >Show Scores</button> */}
       </li>
       </ul>
       <form className="form-inline my-2 my-lg-0">
       <button style={{marginRight: "10px"}} className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clear(e)}>Clear Grid</button>
-      <button className="btn btn-outline-success my-2 my-sm-0" onClick= {(e)=>this.Visualize(e)}>Visualize {this.state.currentAlgo}</button>
+      <button className="btn btn-primary sm" onClick= {(e)=>this.Visualize(e, this.state.showScores)}>Visualize {this.state.currentAlgo}</button>
       </form>
       </div>
       </nav>
