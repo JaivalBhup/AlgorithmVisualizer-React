@@ -65,21 +65,27 @@ class App extends React.Component {
       this.child.current.visualizeGBS(showScore)
     }
   }
+  createMaze(maze){
+    if(maze === "RDFS"){
+      this.child.current.visualizeRandomDFSMaze()
+    }
+  }
   render(){
   return (
     <div className="App">
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <img src="./logo.png" width="30" height="30" style = {{marginRight:"10px"}} alt=""></img>
-      <a className="navbar-brand" href="#">Algorithm Visualizer</a>
+      <a className="navbar-brand" href="https://github.com/JaivalBhup/AlgorithmVisualizer-React">GitHub Repo</a>
+      {/* <a className="navbar-brand" href="#">Algorithm Visualizer</a> */}
       <div className="collapse navbar-collapse" id="navbarSupportedContent">
       <ul className="navbar-nav mr-auto">
       {/* <li className="nav-item active">
       <a className="nav-link" href="https://github.com/JaivalBhup/AlgorithmVisualizer-React">GitHub Repo</a>
       </li> */}
       
-      <li className="nav-item">
+      {/* <li className="nav-item">
         <a className="nav-link" href="https://github.com/JaivalBhup/AlgorithmVisualizer-React">GitHub Repo</a>
-      </li>
+      </li> */}
       <li className="nav-item dropdown">
         <a className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           {this.state.currentAlgo}
@@ -93,6 +99,14 @@ class App extends React.Component {
           <a className="dropdown-item" onClick={()=>this.chageAlgo("DFS")}>Depth First Search</a> 
         </div>
         
+      </li>
+      <li className="nav-item dropdown">
+        <a className="nav-link dropdown-toggle" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Create Maze
+        </a>
+        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+          <a className="dropdown-item" onClick={()=>this.createMaze("RDFS")}>Random Depth First Search</a>
+        </div>  
       </li>
       <li className = "nav-item">
       <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
@@ -111,8 +125,9 @@ class App extends React.Component {
         disabled = {this.state.algoTypeWeighted ? false : true}>
         No</button>
     </div>
+    
   </div>
-      {/* <button className="btn btn-outline-success my-2 my-sm-0" >Show Scores</button> */}
+      
       </li>
       </ul>
       <form className="form-inline my-2 my-lg-0">

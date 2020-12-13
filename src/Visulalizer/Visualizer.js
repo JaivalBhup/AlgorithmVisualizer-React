@@ -5,6 +5,7 @@ import {AStar} from "./Algorithms/AStar"
 import {DFS} from './Algorithms/dfs';
 import {BFS} from './Algorithms/bfs';
 import {GBS} from './Algorithms/gbs';
+import {generateMaze} from './MazeAlgorithms/RandomDFS';
 import "./grid.css";
 
 let STARTNODE_i = 10
@@ -209,6 +210,29 @@ class Visualizer extends React.Component{
         const shortestPath = getPath(endNode);
         this.animate(path,shortestPath, showScore)
     }
+    visualizeRandomDFSMaze(){
+        this.clear()
+        const grid = this.state.grid
+        const startNode = grid[STARTNODE_i][STARTNODE_j]
+        const endNode = grid[ENDNODE_i][ENDNODE_j]
+        const walls = generateMaze(grid, startNode, endNode)
+        this.animateWalls(walls)
+    }
+    animateWalls(walls){
+        for(let i = 0; i<=walls.length;i++){  
+            if(i===walls.length){
+                setTimeout(()=>{
+                    const ng = toggleWalls(this.state.grid,walls)
+                    this.setState({grid:ng})
+                },10*i)
+                return; 
+            }
+            setTimeout(()=>{
+                document.getElementById(`node-${walls[i].row}-${walls[i].col}`).className = "node node-wall";
+                },10*i)
+            }
+        
+    }
     render(){
         const nodes = this.state.grid
         return (<div className = "main">
@@ -278,6 +302,21 @@ function toggleWall(grid, i, j){
         isWall: !node.isWall,
     }
     ng[i][j] = n
+    return ng
+
+}
+function toggleWalls(grid, walls){
+    const ng = grid.slice();
+        for(let w of walls){
+        const i = w.row
+        const j = w.col
+        const node = ng[i][j];
+        const n = {
+            ...node,
+            isWall: !node.isWall,
+        }
+        ng[i][j] = n
+    }
     return ng
 
 }
