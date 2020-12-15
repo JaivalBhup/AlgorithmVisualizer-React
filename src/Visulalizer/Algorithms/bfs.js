@@ -28,6 +28,29 @@ export function BFS(grid, startNode, endNode) {
     return -1
 }
 
+export function Bidirectional(grid, startNode, endNode) {
+    const grid1 = grid.slice()
+    const grid2 = grid.slice()
+    const forward = traverse(grid1, startNode)
+    const backward = traverse(grid2, endNode)
+    console.log(backward)
+    // console.log(forward)
+    // console.log(backward)
+    // let intersection = []
+    // for(let f of forward){
+    //     backward.slice().reverse().forEach((b)=>{
+    //         if(f.row === b.row && f.col === b.col){
+    //             intersection[0] = f
+    //             intersection[1] = b
+    //             const path1 = forward.splice(0, forward.indexOf(intersection[0]))
+    //             const path2 = backward.splice(0, backward.indexOf(intersection[1]))
+    //             return [path1, path2, intersection]
+    //         }
+    //     })
+    // }
+    return -1
+}
+
 function getNeighbours(node, grid) {
     const neighbours = [];
     const {row, col} = node;

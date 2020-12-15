@@ -3,15 +3,18 @@ import Node from "./Node";
 import {dijkstra,getPath} from "./Algorithms/dijkstra"
 import {AStar} from "./Algorithms/AStar"
 import {DFS} from './Algorithms/dfs';
-import {BFS} from './Algorithms/bfs';
+import {BFS, Bidirectional} from './Algorithms/bfs';
 import {GBS} from './Algorithms/gbs';
-import {generateMaze} from './MazeAlgorithms/RandomDFS';
+import {generateMazeRandomDFS} from './MazeAlgorithms/RandomDFS';
+import { recursiveDivision } from "./MazeAlgorithms/RecursiveDivision";
 import "./grid.css";
 
 let STARTNODE_i = 10
 let STARTNODE_j = 15
 let ENDNODE_i = 10
 let ENDNODE_j = 35
+const WIDTH = 60
+const HEIGHT = 30
 
 class Visualizer extends React.Component{
     constructor(){
@@ -22,11 +25,12 @@ class Visualizer extends React.Component{
             startPicked:false,
             endPicked: false,
             message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls",
-            showScores: false
+            showScores: false,
+            algoIsRunning: false
         }
     }
     componentDidMount(){
-        const grid = getGrid(50,30)
+        const grid = getGrid(WIDTH,HEIGHT)
         this.setState({grid: grid})
     }
 
@@ -41,17 +45,17 @@ class Visualizer extends React.Component{
         } 
     }
     clear(){
-        const grid = getGrid(50,30)
+        const grid = getGrid(WIDTH,HEIGHT)
         this.setState({ grid: grid });
         for(let i = 0; i<this.state.grid.length; i++){
             for(let j = 0; j < this.state.grid[0].length;j++){
             if(this.state.grid[i][j].isStart){            
                 document.getElementById(`node-${i}-${j}`).className = "node node-start";}
             if(this.state.grid[i][j].isEnd){            
-                    document.getElementById(`node-${i}-${j}`).className = "node node-end";}
+                document.getElementById(`node-${i}-${j}`).className = "node node-end";}
             if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd){
-            document.getElementById(`node-${i}-${j}`).className = "node";
-            document.getElementById(`node-${i}-${j}`).innerHTML = "";
+                document.getElementById(`node-${i}-${j}`).className = "node";
+                document.getElementById(`node-${i}-${j}`).innerHTML = "";
             }
             }
             this.setState({message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls"})
@@ -157,7 +161,7 @@ class Visualizer extends React.Component{
 
     // Dijkstra
     visualizeDijkstra(showScore){
-        this.setState({message:"Searching..."})
+        this.setState({message:"Searching...", algoIsRunning:true})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
@@ -168,7 +172,7 @@ class Visualizer extends React.Component{
     //-----dijkstra
     // A*
     visualizeAStar(showScore){
-        this.setState({message:"Searching..."})
+        this.setState({message:"Searching...", algoIsRunning:true})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
@@ -179,7 +183,7 @@ class Visualizer extends React.Component{
     //------a*
     //DFS
     visualizeDFS(){
-        this.setState({message:"Searching..."})
+        this.setState({message:"Searching...", algoIsRunning:true})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
@@ -190,7 +194,7 @@ class Visualizer extends React.Component{
     //-------DFS
     //BFS
     visualizeBFS(){
-        this.setState({message:"Searching..."})
+        this.setState({message:"Searching...", algoIsRunning:true})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
@@ -201,8 +205,7 @@ class Visualizer extends React.Component{
     //------BFS
     //Greedy first search
     visualizeGBS(showScore){
-        console.log("GBS")
-        this.setState({message:"Searching..."})
+        this.setState({message:"Searching...", algoIsRunning:true})
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
@@ -210,25 +213,73 @@ class Visualizer extends React.Component{
         const shortestPath = getPath(endNode);
         this.animate(path,shortestPath, showScore)
     }
+
+//     animateBidirectional(path, shortestPath1, shortestPath2){
+//             for(let i = 0; i <= path[0].length; i++){
+//                 // if (i===path.length){
+//                 //     setTimeout(()=>{
+//                 //         this.animateShortestPath(shortestPath1)
+//                 //     }, 10*i)
+//                 //     return;
+//                 // }
+//             setTimeout(()=>{
+//                 const node1 = path[0][i]
+//                 const node2 = path[1][i]
+//                     if(node1 && node2){
+//                         if(!node1.isStart && !node1.isEnd && !node2.isStart && !node2.isEnd){
+//                             document.getElementById(`node-${node1.row}-${node1.col}`).className = "node node-visited";
+//                             document.getElementById(`node-${node2.row}-${node2.col}`).className = "node node-visited";
+//                     }
+//             }
+//                 }, 10*i);
+//             }
+// }
+    // visualizeBidirectional(){
+    //     this.setState({message:"Searching...", algoIsRunning:true})
+    //     const grid = this.state.grid
+    //     const startNode = grid[STARTNODE_i][STARTNODE_j]
+    //     const endNode = grid[ENDNODE_i][ENDNODE_j]
+    //     const path = Bidirectional(grid,startNode, endNode)
+    //     if(path===-1){
+    //         this.setState({message:"No Solution"});
+    //         return; 
+    //     }
+    //     //console.log(path)
+    //     // const shortestPath1 = getPath(path[2][0])
+    //     // const shortestPath2 = getPath(path[2][1])
+    //     //this.animateBidirectional(path, shortestPath1, shortestPath2)
+    // }
     visualizeRandomDFSMaze(){
+        this.setState({algoIsRunning:true})
         this.clear()
         const grid = this.state.grid
         const startNode = grid[STARTNODE_i][STARTNODE_j]
         const endNode = grid[ENDNODE_i][ENDNODE_j]
-        const walls = generateMaze(grid, startNode, endNode)
+        const walls = generateMazeRandomDFS(grid, startNode, endNode)
+        this.animateWalls(walls)
+    }
+    visualizeRecursiveDivision(){
+        this.setState({algoIsRunning:true})
+        this.clear()
+        const grid = this.state.grid
+        const startNode = grid[STARTNODE_i][STARTNODE_j]
+        const endNode = grid[ENDNODE_i][ENDNODE_j]
+        const walls = recursiveDivision(grid, startNode, endNode)
         this.animateWalls(walls)
     }
     animateWalls(walls){
         for(let i = 0; i<=walls.length;i++){  
             if(i===walls.length){
                 setTimeout(()=>{
-                    const ng = toggleWalls(this.state.grid,walls)
+                    const ng = makeWalls(this.state.grid,walls)
                     this.setState({grid:ng})
                 },10*i)
                 return; 
             }
             setTimeout(()=>{
+                if(walls[i]){
                 document.getElementById(`node-${walls[i].row}-${walls[i].col}`).className = "node node-wall";
+                }
                 },10*i)
             }
         
@@ -236,7 +287,7 @@ class Visualizer extends React.Component{
     render(){
         const nodes = this.state.grid
         return (<div className = "main">
-            <h6>{this.state.message}</h6>
+        <h6>{this.state.message}</h6>
             <table className = "grid">
             <tbody>
             {nodes.map((row, rowId) => {
@@ -293,6 +344,18 @@ function getGrid(width, height) {
      }
  }
  
+function toggleVisited(grid,i,j){
+    const ng = grid.slice();
+    const node = ng[i][j];
+    
+    const n = {
+        ...node,
+        isVisited: !node.isVisited,
+    }
+    ng[i][j] = n
+    return ng
+}
+
 function toggleWall(grid, i, j){
     const ng = grid.slice();
     const node = ng[i][j];
@@ -305,18 +368,13 @@ function toggleWall(grid, i, j){
     return ng
 
 }
-function toggleWalls(grid, walls){
+function makeWalls(grid, walls){
     const ng = grid.slice();
         for(let w of walls){
-        const i = w.row
-        const j = w.col
-        const node = ng[i][j];
-        const n = {
-            ...node,
-            isWall: !node.isWall,
+            const i = w.row
+            const j = w.col
+            ng[i][j] = w;
         }
-        ng[i][j] = n
-    }
     return ng
 
 }

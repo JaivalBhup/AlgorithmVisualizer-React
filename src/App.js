@@ -39,12 +39,19 @@ class App extends React.Component {
     if(algo === "GBS"){
       this.setState({algoTypeWeighted:true})
         }
+    if(algo === "Bidirectional"){
+      this.setState({algoTypeWeighted:false})
+        }
     },100)
   }
   clear(e){
     e.preventDefault()
     this.child.current.clear(e)
   }
+  // clearPath(e){
+  //   e.preventDefault()
+  //   this.child.current.clearAnimation(e)
+  // }
   Visualize(e, showScore){
     e.preventDefault()
     const algo = this.state.currentAlgo
@@ -64,10 +71,16 @@ class App extends React.Component {
     if(algo === "GBS"){
       this.child.current.visualizeGBS(showScore)
     }
+    // if(algo === "Bidirectional"){
+    //   this.child.current.visualizeBidirectional()
+    //     }
   }
   createMaze(maze){
     if(maze === "RDFS"){
       this.child.current.visualizeRandomDFSMaze()
+    }
+    if(maze === "RDM"){
+      this.child.current.visualizeRecursiveDivision()
     }
   }
   render(){
@@ -96,6 +109,7 @@ class App extends React.Component {
           <a className="dropdown-item" onClick={()=>this.chageAlgo("GBS")}>Greedy Best Search</a>
           <div className="dropdown-divider">Unweighted</div>
           <a className="dropdown-item" onClick={()=>this.chageAlgo("BFS")}>Breadth First Search</a>
+          <a className="dropdown-item" onClick={()=>this.chageAlgo("Bidirectional")}>Bidirectional</a>
           <a className="dropdown-item" onClick={()=>this.chageAlgo("DFS")}>Depth First Search</a> 
         </div>
         
@@ -106,6 +120,7 @@ class App extends React.Component {
         </a>
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           <a className="dropdown-item" onClick={()=>this.createMaze("RDFS")}>Random Depth First Search</a>
+          <a className="dropdown-item" onClick={()=>this.createMaze("RDM")}>Recursive Division</a>
         </div>  
       </li>
       <li className = "nav-item">
@@ -116,13 +131,13 @@ class App extends React.Component {
         type="button" 
         className={this.state.showScores ? "btn btn-success" : "btn btn-secondary"}
         onClick={()=>this.changeShowScores()}
-        disabled = {this.state.algoTypeWeighted ? false : true}>
+        disabled = {this.state.algoTypeWeighted && !this.state.showScores ? false : true}>
         Yes</button>
       <button 
         type="button" 
         className={this.state.showScores ? "btn btn-secondary" : "btn btn-success"}
         onClick={()=>this.changeShowScores()}
-        disabled = {this.state.algoTypeWeighted ? false : true}>
+        disabled = {this.state.algoTypeWeighted && this.state.showScores ? false : true}>
         No</button>
     </div>
     
@@ -131,6 +146,7 @@ class App extends React.Component {
       </li>
       </ul>
       <form className="form-inline my-2 my-lg-0">
+      {/* <button style={{marginRight: "10px"}} className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clearPath(e)}>Clear Path</button> */}
       <button style={{marginRight: "10px"}} className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clear(e)}>Clear Grid</button>
       <button className="btn btn-primary sm" onClick= {(e)=>this.Visualize(e, this.state.showScores)}>Visualize {this.state.currentAlgo}</button>
       </form>

@@ -5,13 +5,17 @@ function traverse(grid, startNode, visited){
     const ns = neighbours.filter(n=>!visited.includes(n))
     for(let n of ns){
         if(n.isWall){continue}
-        n.previous = startNode;
-        traverse(grid, n, visited);
+        if(!n.isVisited){
+            n.previous = startNode;
+            n.isVisited = true
+            traverse(grid, n, visited);
+        }
     }
     return visited
 }
 
 export function DFS(grid, startNode, endNode) {
+    startNode.isVisited = true
     const nodes = traverse(grid, startNode,[])
     const t = []
     for(let n of nodes){

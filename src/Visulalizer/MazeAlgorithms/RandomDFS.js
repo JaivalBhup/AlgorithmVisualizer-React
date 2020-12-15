@@ -1,4 +1,4 @@
-export function generateMaze(grid, startNode, endNode){
+export function generateMazeRandomDFS(grid, startNode, endNode){
     const walls = []
     for(let i of grid){
         for(let j of i){
