@@ -48,10 +48,10 @@ class App extends React.Component {
     e.preventDefault()
     this.child.current.clear(e)
   }
-  // clearPath(e){
-  //   e.preventDefault()
-  //   this.child.current.clearAnimation(e)
-  // }
+  clearPath(e){
+    e.preventDefault()
+    this.child.current.clearAnimation(e)
+  }
   Visualize(e, showScore){
     e.preventDefault()
     const algo = this.state.currentAlgo
@@ -125,17 +125,17 @@ class App extends React.Component {
       </li>
       <li className = "nav-item">
       <div className="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-      <div style= {{marginTop:"7px", marginRight:"3px",marginLeft:"4px",fontSize:"15px"}}>Show Scores</div>
-      <div className="btn-group btn-group-sm" role="group" aria-label="First group">
+      <div style= {{marginTop:"7px",marginLeft:"20px",fontSize:"15px"}}>Show Scores:</div>
+      <div style= {{marginTop:"3px", border:"1px solid gray", borderRadius:"5px"}} className="btn-group btn-group-sm" role="group" aria-label="First group">
       <button 
         type="button" 
-        className={this.state.showScores ? "btn btn-success" : "btn btn-secondary"}
+        className={this.state.showScores ? "btn btn-dark" : "btn btn-light"}
         onClick={()=>this.changeShowScores()}
         disabled = {this.state.algoTypeWeighted && !this.state.showScores ? false : true}>
         Yes</button>
       <button 
         type="button" 
-        className={this.state.showScores ? "btn btn-secondary" : "btn btn-success"}
+        className={this.state.showScores ? "btn btn-light" : "btn btn-dark"}
         onClick={()=>this.changeShowScores()}
         disabled = {this.state.algoTypeWeighted && this.state.showScores ? false : true}>
         No</button>
@@ -146,9 +146,11 @@ class App extends React.Component {
       </li>
       </ul>
       <form className="form-inline my-2 my-lg-0">
-      {/* <button style={{marginRight: "10px"}} className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clearPath(e)}>Clear Path</button> */}
-      <button style={{marginRight: "10px"}} className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clear(e)}>Clear Grid</button>
-      <button className="btn btn-primary sm" onClick= {(e)=>this.Visualize(e, this.state.showScores)}>Visualize {this.state.currentAlgo}</button>
+      <div className="btn-group btn-group-md" role="group" aria-label="First group">
+        <button className="btn btn-warning my-2 my-sm-0" onClick= {(e)=>this.clearPath(e)}>Clear Path</button>
+        <button className="btn btn-danger my-2 my-sm-0" onClick= {(e)=>this.clear(e)}>Clear Grid</button>
+        <button className="btn btn-success sm" onClick= {(e)=>this.Visualize(e, this.state.showScores)}>Visualize {this.state.currentAlgo}</button>
+      </div>
       </form>
       </div>
       </nav>

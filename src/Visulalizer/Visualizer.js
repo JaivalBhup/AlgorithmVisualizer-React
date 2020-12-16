@@ -36,31 +36,31 @@ class Visualizer extends React.Component{
 
     //Clears Animated nodes only <- Bugs
     clearAnimation(){
+       // const grid = getGrid(WIDTH,HEIGHT)
         for(let i = 0; i<this.state.grid.length; i++){
             for(let j = 0; j < this.state.grid[0].length;j++){
-            if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd && !this.state.grid[i][j].isWall){
-                document.getElementById(`node-${i}-${j}`).className = "node";
-            }
+                if(!this.state.grid[i][j].isWall){
+                    this.setState({grid: makeNewNode(this.state.grid, i, j)})
+                    if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd){
+                        document.getElementById(`node-${i}-${j}`).className = "node";
+                        document.getElementById(`node-${i}-${j}`).innerHTML = "";
+                    }
+                
+                }
             }
         } 
     }
     clear(){
         const grid = getGrid(WIDTH,HEIGHT)
-        this.setState({ grid: grid });
         for(let i = 0; i<this.state.grid.length; i++){
             for(let j = 0; j < this.state.grid[0].length;j++){
-            if(this.state.grid[i][j].isStart){            
-                document.getElementById(`node-${i}-${j}`).className = "node node-start";}
-            if(this.state.grid[i][j].isEnd){            
-                document.getElementById(`node-${i}-${j}`).className = "node node-end";}
-            if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd){
-                document.getElementById(`node-${i}-${j}`).className = "node";
-                document.getElementById(`node-${i}-${j}`).innerHTML = "";
+                if(!this.state.grid[i][j].isStart && !this.state.grid[i][j].isEnd){
+                    document.getElementById(`node-${i}-${j}`).className = "node";
+                    document.getElementById(`node-${i}-${j}`).innerHTML = "";
+                }
             }
-            }
-            this.setState({message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls"})
         } 
-          
+        this.setState({grid: grid,message: "Drag and drop Start and End nodes to change their position. Drag through the grid to create walls"})      
     }
     //----------Clear
 
@@ -281,8 +281,7 @@ class Visualizer extends React.Component{
                 document.getElementById(`node-${walls[i].row}-${walls[i].col}`).className = "node node-wall";
                 }
                 },10*i)
-            }
-        
+    }
     }
     render(){
         const nodes = this.state.grid
@@ -344,15 +343,10 @@ function getGrid(width, height) {
      }
  }
  
-function toggleVisited(grid,i,j){
+function makeNewNode(grid,i,j){
     const ng = grid.slice();
-    const node = ng[i][j];
-    
-    const n = {
-        ...node,
-        isVisited: !node.isVisited,
-    }
-    ng[i][j] = n
+    const node = newNode(i,j);
+    ng[i][j] = node
     return ng
 }
 
