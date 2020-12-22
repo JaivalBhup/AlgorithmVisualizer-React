@@ -3,7 +3,7 @@ import Node from "./Node";
 import {dijkstra,getPath} from "./Algorithms/dijkstra"
 import {AStar} from "./Algorithms/AStar"
 import {DFS} from './Algorithms/dfs';
-import {BFS, Bidirectional} from './Algorithms/bfs';
+import {BFS,BFS1, Bidirectional} from './Algorithms/bfs';
 import {GBS} from './Algorithms/gbs';
 import {generateMazeRandomDFS} from './MazeAlgorithms/RandomDFS';
 import { recursiveDivision } from "./MazeAlgorithms/RecursiveDivision";
@@ -67,37 +67,35 @@ class Visualizer extends React.Component{
     //Mouse Events For Wall, Start and End
     handleMouseDown(i,j){
         const node = this.state.grid[i][j]
-        if(node.isStart){
-            const ng = removeStart(this.state.grid, i,j)
-            this.setState({mousePressed:true, startPicked: true, grid: ng})
-            
-        }
-        else if(node.isEnd){
-            const ng = removeEnd(this.state.grid, i,j)
-            this.setState({mousePressed:true, endPicked: true, grid: ng})
-        }
-        else{
+        if(!node.isEnd&&!node.isStart){
             const ng = toggleWall(this.state.grid, i, j);
             this.setState({grid:ng, mousePressed : true});
         }
     }
     handleMouseEnter(i,j){
         if(!this.state.mousePressed) return;
+        const node = this.state.grid[i][j]
         if(this.state.startPicked){
-            STARTNODE_i = i
-            STARTNODE_j = j
-            const ng = makeStart(this.state.grid, i,j)
-            this.setState({grid: ng})
+            if(!node.isWall){
+                STARTNODE_i = i
+                STARTNODE_j = j
+                const ng = makeStart(this.state.grid, i,j)
+                this.setState({grid: ng})
+            }
         }
         else if(this.state.endPicked){
-            ENDNODE_i = i
-            ENDNODE_j = j
-            const ng = makeEnd(this.state.grid, i,j)
-            this.setState({grid: ng})
+            if(!node.isWall){
+                ENDNODE_i = i
+                ENDNODE_j = j
+                const ng = makeEnd(this.state.grid, i,j)
+                this.setState({grid: ng})
+            }
         }
         else{
-        const ng = toggleWall(this.state.grid, i, j);
-        this.setState({grid:ng});
+            if(!this.state.grid[i][j].isStart&&!this.state.grid[i][j].isEnd){
+                const ng = toggleWall(this.state.grid, i, j);
+                this.setState({grid:ng});
+            }
         }
     }
     handleMouseLeave(i,j){
@@ -111,8 +109,35 @@ class Visualizer extends React.Component{
             this.setState({grid: ng})
         }
     }
-    handleMouseUp(){
-        this.setState({startPicked: false, endPicked: false,mousePressed : false});
+    handleMouseUp(i,j){
+        const node = this.state.grid[i][j]
+        if(this.state.startPicked){
+            STARTNODE_i = i
+            STARTNODE_j = j
+            const ng = makeStart(this.state.grid, i,j)
+            this.setState({grid: ng, startPicked: false,mousePressed : false})
+        }
+        else if(this.state.endPicked){
+            ENDNODE_i = i
+            ENDNODE_j = j
+            const ng = makeEnd(this.state.grid, i,j)
+            this.setState({grid: ng, endPicked : false,mousePressed : false})
+        }
+        else{
+            if(node.isStart){
+                this.setState({startPicked: true,mousePressed : true});
+                const ng = removeStart(this.state.grid, i,j)
+                this.setState({grid: ng})
+            }
+            else if(node.isEnd){
+                this.setState({endPicked: true,mousePressed : true});
+                const ng = removeEnd(this.state.grid, i,j)
+                this.setState({grid: ng})
+            }
+            else{
+                this.setState({startPicked: false, endPicked: false,mousePressed : false});
+            }
+        }
     }
 
     //------------------ Mouse Events
@@ -214,41 +239,79 @@ class Visualizer extends React.Component{
         this.animate(path,shortestPath, showScore)
     }
 
-//     animateBidirectional(path, shortestPath1, shortestPath2){
-//             for(let i = 0; i <= path[0].length; i++){
-//                 // if (i===path.length){
-//                 //     setTimeout(()=>{
-//                 //         this.animateShortestPath(shortestPath1)
-//                 //     }, 10*i)
-//                 //     return;
-//                 // }
-//             setTimeout(()=>{
-//                 const node1 = path[0][i]
-//                 const node2 = path[1][i]
-//                     if(node1 && node2){
-//                         if(!node1.isStart && !node1.isEnd && !node2.isStart && !node2.isEnd){
-//                             document.getElementById(`node-${node1.row}-${node1.col}`).className = "node node-visited";
-//                             document.getElementById(`node-${node2.row}-${node2.col}`).className = "node node-visited";
-//                     }
-//             }
-//                 }, 10*i);
-//             }
-// }
-    // visualizeBidirectional(){
+    animateBidirectional(path1,path2, shortestPath1, shortestPath2){
+
+            for(let i = 0; i <= path1.length; i++){
+                if (i===path1.length){
+                    setTimeout(()=>{
+                        this.animateShortestPath(shortestPath1)
+                        this.animateShortestPath(shortestPath2)
+                    }, 10*i)
+                    return;
+                }
+            setTimeout(()=>{
+                const node1 = path1[i]
+                const node2 = path2[i]
+                    if(node1 && node2){
+                        if(!node1.isStart && !node1.isEnd && !node2.isStart && !node2.isEnd){
+                            document.getElementById(`node-${node1.row}-${node1.col}`).className = "node node-visited";
+                            document.getElementById(`node-${node2.row}-${node2.col}`).className = "node node-visited";
+                    }
+            }
+                }, 10*i);
+            }
+    }
+    visualizeBidirectional(){
     //     this.setState({message:"Searching...", algoIsRunning:true})
-    //     const grid = this.state.grid
+    //     let grid = this.state.grid
     //     const startNode = grid[STARTNODE_i][STARTNODE_j]
     //     const endNode = grid[ENDNODE_i][ENDNODE_j]
-    //     const path = Bidirectional(grid,startNode, endNode)
-    //     if(path===-1){
-    //         this.setState({message:"No Solution"});
-    //         return; 
+    //     const path1 = BFS1(grid,startNode)
+    //     grid = getGrid(WIDTH,HEIGHT)
+    //     const path2 = BFS1(grid, endNode)
+    //     let intersection1 = null
+    //     let intersection2 = null
+    //     let found = false
+    //     let p = 0
+    //     let q = 0
+    //     while(!found&&p<path1.length&&path2.length>q){
+    //         let i = path1[p]
+    //         let j = path2[q]
+    //         if(i.col === j.col && i.row === j.row){
+    //             intersection1 = i
+    //             intersection2 = j
+    //             found = true
+    //         }
+    //         p++;
+    //         q++;
     //     }
-    //     //console.log(path)
-    //     // const shortestPath1 = getPath(path[2][0])
-    //     // const shortestPath2 = getPath(path[2][1])
-    //     //this.animateBidirectional(path, shortestPath1, shortestPath2)
-    // }
+    //     // for(let p = path1.length-1; p>=0; p--){
+    //     //     let i = path1[p]
+    //     //     for(let q = path2.length-1; q>=0; q--){
+    //     //         let j = path2[q]
+    //     //         if(i.col === j.col && i.row === j.row){
+    //     //             intersection1 = i
+    //     //             intersection2 = j
+    //     //             found = true
+    //     //             break
+    //     //         }
+    //     //     }
+    //     //     if(found){
+    //     //         break
+    //     //     }
+    //     // }
+    //     if(found){
+    //         const shortest1 = getPath(intersection1)
+    //         const shortest2 = getPath(intersection2)
+    //         const p1 = path1.splice(0,path1.indexOf(intersection1)+1)
+    //         const p2 = path2.splice(0,path2.indexOf(intersection2)+1)
+    //         console.log(p1,p2)
+    //         this.animateBidirectional(p1,p2,shortest1,shortest2)
+    //     }
+
+    return;
+        
+    }
     visualizeRandomDFSMaze(){
         this.setState({algoIsRunning:true})
         this.clear()
@@ -303,7 +366,7 @@ class Visualizer extends React.Component{
                                 isVisited = {isVisited}
                                 onMouseDown = {(row,col)=>this.handleMouseDown(row,col)}
                                 onMouseEnter = {(row,col)=>this.handleMouseEnter(row,col)}
-                                onMouseUp = {()=>this.handleMouseUp()}
+                                onMouseUp = {(row,col)=>this.handleMouseUp(row,col)}
                                 onMouseLeave = {(row, col)=>this.handleMouseLeave(row,col)}>
                                 </Node>})}</tr>
                         })}

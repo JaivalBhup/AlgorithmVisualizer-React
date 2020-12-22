@@ -71,9 +71,9 @@ class App extends React.Component {
     if(algo === "GBS"){
       this.child.current.visualizeGBS(showScore)
     }
-    // if(algo === "Bidirectional"){
-    //   this.child.current.visualizeBidirectional()
-    //     }
+    if(algo === "Bidirectional"){
+      this.child.current.visualizeBidirectional()
+        }
   }
   createMaze(maze){
     if(maze === "RDFS"){

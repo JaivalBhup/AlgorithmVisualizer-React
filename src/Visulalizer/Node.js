@@ -9,7 +9,7 @@ export default class Node extends React.Component{
                     className = {`node ${addedClass}`}
                     onMouseDown = {()=>onMouseDown(row,col)}
                     onMouseEnter = {() => onMouseEnter(row,col)}
-                    onMouseUp = {()=>onMouseUp()}
+                    onMouseUp = {()=>onMouseUp(row,col)}
                     onMouseLeave = {()=>onMouseLeave(row,col)}
                     ></td>
     }

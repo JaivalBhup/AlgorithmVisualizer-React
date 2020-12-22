@@ -27,6 +27,11 @@ export function BFS(grid, startNode, endNode) {
     }
     return -1
 }
+export function BFS1(grid, startNode) {
+    const nodes = traverse(grid, startNode)
+    if(nodes) return nodes;
+    return -1
+}
 
 export function Bidirectional(grid, startNode, endNode) {
     const grid1 = grid.slice()
